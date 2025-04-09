@@ -1,4 +1,4 @@
-# Network Lab Repository
+# Network Lab Programs
 
 This repository contains programs and scripts developed for the **Network Lab** KTU 6th Semester CSE**. 
 
