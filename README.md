@@ -1,6 +1,6 @@
 # Network Lab Programs
 
-This repository contains programs and scripts developed for the **Network Lab** KTU 6th Semester CSE**. 
+This repository contains programs and scripts developed for the **Network Lab** KTU 6th Semester CSE. 
 
 - **Distance Vector Routing (DVR) Protocol**  
   Implementation of the DVR algorithm to compute shortest paths in a network.
