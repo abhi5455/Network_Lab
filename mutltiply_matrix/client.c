@@ -43,21 +43,21 @@ int main() {
     }
 
     len = sizeof(server);
-    sendto(sockfd, &m, sizeof(m), 0, (SA*) &server, len);
-    sendto(sockfd, &n, sizeof(n), 0, (SA*) &server, len);
-    sendto(sockfd, A, sizeof(A), 0, (SA*) &server, len);
+    sendto(sockfd, &m, sizeof(m), 0, (SA *) &server, len);
+    sendto(sockfd, &n, sizeof(n), 0, (SA *) &server, len);
+    sendto(sockfd, A, sizeof(A), 0, (SA *) &server, len);
 
-    sendto(sockfd, &p, sizeof(m), 0, (SA*) &server, len);
-    sendto(sockfd, &q, sizeof(n), 0, (SA*) &server, len);
-    sendto(sockfd, B, sizeof(B), 0, (SA*) &server, len);
+    sendto(sockfd, &p, sizeof(m), 0, (SA *) &server, len);
+    sendto(sockfd, &q, sizeof(n), 0, (SA *) &server, len);
+    sendto(sockfd, B, sizeof(B), 0, (SA *) &server, len);
 
-    recvfrom(sockfd, &multPossible, sizeof(multPossible), 0, (SA*) &server, &len);
-    if(multPossible == 0){
+    recvfrom(sockfd, &multPossible, sizeof(multPossible), 0, (SA *) &server, &len);
+    if (multPossible == 0) {
         printf("Multiplication is not possible\n");
         return -1;
     }
 
-    recvfrom(sockfd, result, sizeof(result), 0, (SA*) &server, &len);
+    recvfrom(sockfd, result, sizeof(result), 0, (SA *) &server, &len);
 
     printf("The resultant matrix is: \n");
     for (int i = 0; i < m; i++) {

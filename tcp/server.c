@@ -5,21 +5,19 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-
 #define MAX 80
-#define PORT 8080
 #define SA struct sockaddr
 #define SAI struct sockaddr_in
 
-void chat(int connfd){
+void chat(int connfd) {
     char buff[MAX];
     int n;
-    while(1){
+    while (1) {
         bzero(buff, MAX);
         read(connfd, buff, sizeof(buff));
         printf("Client: %sServer: ", buff);
         bzero(buff, MAX);
-        n =0;
+        n = 0;
         while ((buff[n++] = getchar()) != '\n');
         write(connfd, buff, sizeof(buff));
         if (strncmp("exit", buff, 4) == 0) {
@@ -29,25 +27,28 @@ void chat(int connfd){
     }
 }
 
-int main(){
-    SAI server,client;
+int main() {
+    SAI server, client;
     // socket create
-    int sockfd, connfd, len;
+    int sockfd, connfd, len, port;
+
+    printf("Enter Port Number: ");
+    scanf("%d", &port);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     printf("Socket successfully created.....\n");
     // server init
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = htonl(INADDR_ANY);
-    server.sin_port = htons(PORT);
+    server.sin_port = htons(port);
     //binding
-    if ((bind(sockfd, (SA*)&server, sizeof(server))) == 0) 
+    if ((bind(sockfd, (SA *) &server, sizeof(server))) == 0)
         printf("Socket successfully binded..\n");
     //listening
-    if ((listen(sockfd, 5)) == 0) 
+    if ((listen(sockfd, 5)) == 0)
         printf("Server listening..\n");
     //accept request
     len = sizeof(client);
-    connfd = accept(sockfd, (SA*)&client, (socklen_t*)&len);
+    connfd = accept(sockfd, (SA *) &client, (socklen_t * ) & len);
     printf("Server accept the client...\n");
 
     chat(connfd);

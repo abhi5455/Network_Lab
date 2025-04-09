@@ -33,15 +33,15 @@ int main() {
     server.sin_family = AF_INET;
     server.sin_port = htons(port);
     server.sin_addr.s_addr = htonl(INADDR_ANY);
-    
+
     bind(sockfd, (struct sockaddr *) &server, sizeof(server));
     printf("Socket binded Successfully\n");
 
     int A[MAX][MAX], B[MAX][MAX], result[MAX][MAX];
 
-    recvfrom(sockfd, &m, sizeof(m), 0, (struct sockaddr *) &client, (socklen_t*)&len);
-    recvfrom(sockfd, &n, sizeof(n), 0, (struct sockaddr *) &client, (socklen_t*)&len);
-    recvfrom(sockfd, A, sizeof(A), 0, (struct sockaddr *) &client, (socklen_t*)&len);
+    recvfrom(sockfd, &m, sizeof(m), 0, (struct sockaddr *) &client, (socklen_t * ) & len);
+    recvfrom(sockfd, &n, sizeof(n), 0, (struct sockaddr *) &client, (socklen_t * ) & len);
+    recvfrom(sockfd, A, sizeof(A), 0, (struct sockaddr *) &client, (socklen_t * ) & len);
     printf("Matrix A: \n");
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
@@ -50,9 +50,9 @@ int main() {
         printf("\n");
     }
 
-    recvfrom(sockfd, &p, sizeof(m), 0, (struct sockaddr *) &client, (socklen_t*)&len);
-    recvfrom(sockfd, &q, sizeof(n), 0, (struct sockaddr *) &client, (socklen_t*)&len);
-    recvfrom(sockfd, B, sizeof(B), 0, (struct sockaddr *) &client, (socklen_t*)&len);
+    recvfrom(sockfd, &p, sizeof(m), 0, (struct sockaddr *) &client, (socklen_t * ) & len);
+    recvfrom(sockfd, &q, sizeof(n), 0, (struct sockaddr *) &client, (socklen_t * ) & len);
+    recvfrom(sockfd, B, sizeof(B), 0, (struct sockaddr *) &client, (socklen_t * ) & len);
     printf("Matrix B: \n");
     for (int i = 0; i < p; i++) {
         for (int j = 0; j < q; j++) {
@@ -61,14 +61,14 @@ int main() {
         printf("\n");
     }
 
-    if(p==q){
+    if (p == q) {
         multPossible = 1;
         printf("Cannot perform Multiplication");
         sendto(sockfd, &multPossible, sizeof(multPossible), 0, (struct sockaddr *) &client, len);
         return -1;
     }
 
-    multiply_matrix(A,B,result,m,q);
+    multiply_matrix(A, B, result, m, q);
     sendto(sockfd, result, sizeof(result), 0, (struct sockaddr *) &client, len);
 
     printf("Multiplication Result is sent back to client\n");
