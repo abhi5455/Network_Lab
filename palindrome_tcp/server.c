@@ -7,77 +7,73 @@
 #include <ctype.h>
 
 #define MAX 80
-#define PORT 8080
 #define SA struct sockaddr
 #define SAI struct sockaddr_in
 
-void low_up(char buff[]){
-    char str[MAX],temp[MAX]; int len;
-		strcpy(str,buff);
-		len = strlen(str)-1;
-        int i;
-		for(i=0;i<len;i++)
-		{
-			if(islower(str[i]))
-				str[i]=toupper(str[i]);
-			else if(isupper(str[i]))
-				str[i]=tolower(str[i]);
-		}
-		printf("\nThe inverted case buffer is:%s\nThe number of characters is %d\n",str,len);
-
+int is_palindrome(char str[]) {
+    int len = strlen(str);
+    for (int i = 0; i < len / 2; i++)
+        if (str[i] != str[len - i - 1])
+            return 0;
+    return 1;
 }
 
-void token(char buff[]){
-    char *token;
-    token = strtok(buff, " ");  // Split the string into tokens using space as the delimiter
-
-    while (token != NULL)
-    {
-        // Capitalize the first letter of the token
-        token[0] = toupper(token[0]);
-        // Print the first letter
-        printf("%c ", token[0]);
-        // Get the next token
-        token = strtok(NULL, " ");
+void reverse_string(char str[]) {
+    int len = strlen(str);
+    for (int i = 0; i < len / 2; i++) {
+        char temp = str[i];
+        str[i] = str[len - i - 1];
+        str[len - i - 1] = temp;
     }
-    printf("\n"); 
 }
 
-void chat(int connfd){
+void chat(int connfd) {
     char buff[MAX];
     int n;
-    while(1){
+    while (1) {
         bzero(buff, MAX);
         read(connfd, buff, sizeof(buff));
-        // low_up(buff);
-        token(buff);
-        printf("Server: ");
-        bzero(buff, MAX);
-        n =0;
-        while ((buff[n++] = getchar()) != '\n');
-        write(connfd, buff, sizeof(buff));
+        buff[strcspn(buff, "\n")] = '\0';
+
         if (strncmp("exit", buff, 4) == 0) {
             printf("Server Exit...\n");
             break;
         }
+
+        printf("Received from client: %s\n", buff);
+
+        if (is_palindrome(buff)) {
+            printf("%s is a palindrome\n", buff);
+            strcpy(buff, "Palindrome");
+        } else {
+            printf("%s is not a palindrome. Reversing and sending back...\n", buff);
+            reverse_string(buff);
+        }
+
+        write(connfd, buff, strlen(buff) + 1);
     }
 }
 
+
 int main(){
     SAI server,client;
-    int sockfd, connfd, len;
+    int sockfd, connfd, len, port;
+
+    printf("Enter Port Number: ");
+    scanf("%d", &port);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    printf("Socket successfully created.....\n");
+    printf("Socket successfully created\n");
+
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = htonl(INADDR_ANY);
-    server.sin_port = htons(PORT);
+    server.sin_port = htons(port);
     if ((bind(sockfd, (SA*)&server, sizeof(server))) == 0) 
-        printf("Socket successfully binded..\n");
+        printf("Socket successfully binded\n");
     if ((listen(sockfd, 5)) == 0) 
-        printf("Server listening..\n");
+        printf("Server listening...\n");
     len = sizeof(client);
     connfd = accept(sockfd, (SA*)&client, (socklen_t*)&len);
-    printf("Server accept the client...\n");
+    printf("Server accept the client\n");
 
     chat(connfd);
     close(sockfd);
