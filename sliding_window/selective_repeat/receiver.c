@@ -14,6 +14,7 @@ int main() {
     srand(time(0));
 
     struct sockaddr_in server = {0};
+    char buff[50];
     int sockfd = socket(AF_INET, SOCK_STREAM, 0), port;
 
     printf("Enter Port Number: ");
@@ -25,8 +26,6 @@ int main() {
 
     connect(sockfd, (struct sockaddr *) &server, sizeof(server));
     printf("Client started...\n");
-
-    char buff[50];
 
     while (1) {
         bzero(buff, sizeof(buff));
